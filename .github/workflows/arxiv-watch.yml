@@ -2,7 +2,7 @@ name: arxiv-condmat-page-watch
 
 on:
   schedule:
-    - cron: "*/10 * * * *"   # 每15分钟一次
+    - cron: "*/10 * * * *"   # 每10分钟一次
   workflow_dispatch:         # 允许手动点 Run
 
 jobs:

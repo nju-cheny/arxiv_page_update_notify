@@ -1,0 +1,43 @@
+name: arxiv-condmat-page-watch
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # 每15分钟一次
+  workflow_dispatch:         # 允许手动点 Run
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Run watcher
+        env:
+          ARXIV_LIST_URL: "https://arxiv.org/list/cond-mat/new"
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+          # 可选：测试用（发测试邮件但不更新state）
+          # TEST_MODE: "1"
+        run: python arxiv_page_update_notify.py
+
+      - name: Commit state.json if changed
+        run: |
+          if [ -f state.json ]; then
+            git config user.name "github-actions"
+            git config user.email "github-actions@github.com"
+            git add state.json
+            git commit -m "Update state" || true
+            git push || true
+          fi

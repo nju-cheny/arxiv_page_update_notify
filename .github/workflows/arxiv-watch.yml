@@ -23,8 +23,8 @@ jobs:
       - name: Run watcher
         env:
           ARXIV_LIST_URL: "https://arxiv.org/list/cond-mat/new"
-          SMTP_HOST: ${{ secrets.SMTP_HOST }}
-          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_HOST: "smtp.exmail.qq.com"
+          SMTP_PORT: "465"
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
